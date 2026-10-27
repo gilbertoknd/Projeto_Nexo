@@ -1,11 +1,19 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Carrega arquivo .env da raiz do projeto ou da pasta backend
+load_dotenv(BASE_DIR.parent / '.env')
+load_dotenv(BASE_DIR / '.env')
+
+# Segurança & Core
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'dev-secret-key-contratacao-mvp-2026')
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True'
-ALLOWED_HOSTS = ['*']
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() in ('true', '1', 't')
+
+allowed_hosts_raw = os.environ.get('DJANGO_ALLOWED_HOSTS', '*')
+ALLOWED_HOSTS = [host.strip() for host in allowed_hosts_raw.split(',') if host.strip()]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -65,22 +73,27 @@ DATABASES = {
 }
 
 # Internacionalização e Fuso Horário (Importante para os jobs das 00:00 e 01:00)
-LANGUAGE_CODE = 'pt-br'
-TIME_ZONE = 'America/Recife'
+LANGUAGE_CODE = os.environ.get('LANGUAGE_CODE', 'pt-br')
+TIME_ZONE = os.environ.get('TIME_ZONE', 'America/Recife')
 USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CORS (Permite que o Next.js em localhost:3000 consuma a API)
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS (Permite comunicação com o Next.js)
+CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ALLOW_ALL_ORIGINS', 'True').lower() in ('true', '1', 't')
+cors_origins_raw = os.environ.get('CORS_ALLOWED_ORIGINS', 'http://localhost:3000,http://127.0.0.1:3000')
+CORS_ALLOWED_ORIGINS = [origin.strip() for origin in cors_origins_raw.split(',') if origin.strip()]
 
 # Configurações do Celery + RabbitMQ
-CELERY_BROKER_URL = os.environ.get(
-    'CELERY_BROKER_URL',
-    'amqp://guest:guest@rabbitmq:5672//'
-)
+rabbitmq_user = os.environ.get('RABBITMQ_DEFAULT_USER', 'guest')
+rabbitmq_pass = os.environ.get('RABBITMQ_DEFAULT_PASS', 'guest')
+rabbitmq_host = os.environ.get('RABBITMQ_HOST', 'rabbitmq')
+rabbitmq_port = os.environ.get('RABBITMQ_PORT', '5672')
+default_broker_url = f'amqp://{rabbitmq_user}:{rabbitmq_pass}@{rabbitmq_host}:{rabbitmq_port}//'
+
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL', default_broker_url)
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE

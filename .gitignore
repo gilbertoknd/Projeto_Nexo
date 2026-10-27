@@ -1,7 +1,10 @@
 # Documento de estudo pessoal
-GUIA_ESTUDO_ENTREVISTA.md
+AnotacoesEstudo.md
 
 # Python & Django
+venv/
+.venv/
+env/
 __pycache__/
 *.py[cod]
 *$py.class
