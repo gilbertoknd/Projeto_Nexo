@@ -14,6 +14,7 @@
 - **Pagamento**
   - `proposta`: OneToOneField(Proposta, related_name=`pagamento`, on_delete=CASCADE)
   - `status`: TextChoices (`PENDENTE`, `CONFIRMADO`, `FALHOU`), default=`PENDENTE`
+  - `atualizado_em`: DateTimeField(auto_now=True)
 
 ## 2. Endpoints e Payloads Exatos (DRF)
 ### `GET /api/solicitacoes/`

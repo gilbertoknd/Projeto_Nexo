@@ -1,5 +1,8 @@
-# Documento de estudo pessoal
+# Documentos locais e especificações de agentes (mantém apenas /docs no Git)
 AnotacoesEstudo.md
+AGENTS.md
+SPEC.md
+GEMINI.md
 
 # Python & Django
 venv/

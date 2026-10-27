@@ -1,9 +1,11 @@
 # 03. Especificação do Frontend (Next.js + Ant Design + React Query)
 
 ## 1. Gerenciamento de Estado (`@tanstack/react-query`)
+- **Configuração de Ambiente**:
+  - `NEXT_PUBLIC_API_URL`: URL base da API Django (default: `http://localhost:8000/api`).
 - **Listagem (`useQuery`)**:
   - `queryKey: ['solicitacoes']`
-  - `queryFn`: `GET http://localhost:8000/api/solicitacoes/`
+  - `queryFn`: `GET ${NEXT_PUBLIC_API_URL}/solicitacoes/`
   - `refetchInterval: 3000` (obrigatório para observar a transição assíncrona `PENDENTE` -> `CONFIRMADO`/`FALHOU` e `ABERTA` -> `CONTRATADA` em tempo real).
 - **Mutações (`useMutation`)**:
   - Criar solicitação (`POST /api/solicitacoes/`)
